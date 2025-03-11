@@ -14,7 +14,8 @@ import {
   View,
 } from "react-native";
 import ReactNativeModal from "react-native-modal";
-import { WebView } from "react-native-webview";
+// import { WebView } from "react-native-webview";
+import YoutubePlayer from "react-native-youtube-iframe";
 
 export default function VideoScreen() {
   const router = useRouter()
@@ -82,20 +83,30 @@ export default function VideoScreen() {
       ) : (
         <>
           <ScrollView>
-            {videos?.map((item) => (
-              <View
-                className="mb-5 bg-blac h-[300px] rounded-2xl overflow-hidden"
+            {videos?.map((item) => {
+              console.log("Extracted Video ID:", parseLink(item?.youtube_link));
+
+              return (
+                <View
+                className="mb-5 bg-blac rounded-2xl overflow-hidden"
                 key={item?.id}
               >
-                <WebView
+                <YoutubePlayer
+                  height={180}
+                  play={false}
+                  videoId={parseLink(item?.youtube_link)}
+                />
+
+                {/* <WebView
                   style={{ flex: 1, borderRadius: 20 }}
                   source={{
                     uri: `https://www.youtube.com/embed/${parseLink(item?.youtube_link)}`,
                   }}
+                  originWhitelist={["*"]}
                   javaScriptEnabled
                   domStorageEnabled
                   allowsFullscreenVideo
-                />
+                /> */}
 
                 <View className="bg-white p-5 flex-row justify-between items-center">
                   <AppText className="w-[80%]">{item?.title}</AppText>
@@ -115,7 +126,8 @@ export default function VideoScreen() {
                   </TouchableOpacity>
                 </View>
               </View>
-            ))}
+              )
+            })}
           </ScrollView>
 
           <AppFloatingActionButton
